@@ -1,0 +1,5 @@
+==========
+edi.search
+==========
+
+User documentation
