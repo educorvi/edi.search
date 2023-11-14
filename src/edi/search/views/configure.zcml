@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="edi.search">
+
+  -*- extra stuff goes here -*-
+
+  <browser:page
+    name="custom-search-view"
+    for="Products.CMFCore.interfaces.IFolderish"
+    class=".custom_search_view.CustomSearchView"
+    template="custom_search_view.pt"
+    permission="zope2.View"
+    />
+
+
+</configure>
