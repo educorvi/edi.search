@@ -5,9 +5,116 @@
       i18n:domain="edi.search"
       metal:use-macro="context/main_template/macros/master">
 <body>
+  <metal:main fill-slot="main">
+    <tal:main-macro metal:define-macro="main">
+      <div class="container" id="main-content">
+        <div class="row">
+          <span class="col-12" tal:content="structure provider:plone.abovecontenttitle"/>
+        </div>
+        <h1 class="documentFirstHeading">Suche</h1>
+        <div class="row">
+          <div class="col-9">
+            <div>
+              <form class="form-group d-flex" role="search">
+                <input class="form-control" name="search" type="text" placeholder="Suchbegriff eingeben...">
+                <button class="btn btn-primary" type="submit" title="Suchen">Suchen</button>
+              </form>
+            </div>
+            <div>${view/search}</div>
+          </div>
+          <div class="col-3">COL3</div>
+        </div>
+        DARUNTER
+      </div> <!-- Ende Container-->
+    </tal:main-macro>
+  </metal:main>
+
+<script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
+<script>
+  // 1. Instantiate the search
+  const search = instantsearch({
+    indexName: 'instant_search',
+    searchClient: algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76'),
+  });
+
+  search.addWidgets([
+    // 2. Create an interactive search box
+    instantsearch.widgets.searchBox({
+      container: '#searchbox',
+      placeholder: 'Search for products',
+    }),
+
+    // 3. Plug the search results into the product container
+    instantsearch.widgets.hits({
+      container: '#products',
+      templates: {
+        item: (hit, { html, components }) =>
+          html`
+            <h3>${components.Highlight({ attribute: 'name', hit })}</h3>
+            <p>${components.Snippet({ attribute: 'description', hit })}</p>
+          `,
+      },
+    }),
+
+    // 4. Make the brands refinable
+    instantsearch.widgets.refinementList({
+      container: '#brand',
+      attribute: 'brand',
+    }),
+  ]);
+
+  // 5. Start the search!
+  search.start();
+</script>
+
+  <!--
+  <script src="https://unpkg.com/vue@3/dist/vue.js"></script>
+
+  <script>
+    Vue.component('todo-component', {
+      template: '#todo-component',
+      data: function () {
+        return {
+          items: [
+            {
+              id: 'item-1',
+              title: 'Checkout vue',
+              completed: false
+            }, {
+              id: 'item-2',
+              title: 'Use this stuff!!',
+              completed: false
+            }
+          ],
+          newItem: ''
+
+        };
+      },
+      methods: {
+        addItem: function () {
+          if (this.newItem) {
+            var item = {
+              id: Math.random(0, 10000),
+              title: this.newItem,
+              completed: false
+            };
+
+            this.items.push(item);
+            this.newItem = '';
+          }
+        }
+      }
+    });
+    var app = new Vue({
+      el: '#vue-app'
+    });
+  </script>
+  -->
+  <!--
   <metal:block fill-slot="content-core">
       <h2 i18n:translate="">Sample View</h2>
       <p tal:content="view/msg">this gets replaced</p>
   </metal:block>
+  -->
 </body>
 </html>
